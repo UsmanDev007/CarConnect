@@ -15,6 +15,7 @@ export const useAuth = (rolePath) => { // rolePath would be 'admin', 'dealer', o
         const res=await API.post(`/${rolePath}/register`,{name,email,password,phone})
         localStorage.setItem('token',res.data.token)
         localStorage.setItem('role',rolePath)
+        return res.data
     }
     return { login,register };
 };

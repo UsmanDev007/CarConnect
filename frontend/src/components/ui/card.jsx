@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("rounded-xl border bg-white text-slate-950 shadow", className)}
+    // Changed bg-white to bg-slate-900 and text-slate-950 to text-slate-50 for Dark Theme
+    className={cn("rounded-xl border border-slate-800 bg-slate-900 text-slate-50 shadow", className)}
     {...props}
   />
 ))
@@ -16,9 +17,20 @@ const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <h3 ref={ref} className={cn("font-semibold leading-none tracking-tight", className)} {...props} />
+  <h3 ref={ref} className={cn("font-semibold leading-none tracking-tight text-white", className)} {...props} />
 ))
 CardTitle.displayName = "CardTitle"
+
+// --- ADDED THIS SECTION ---
+const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-sm text-slate-400", className)}
+    {...props}
+  />
+))
+CardDescription.displayName = "CardDescription"
+// --------------------------
 
 const CardContent = React.forwardRef(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
@@ -30,4 +42,5 @@ const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardContent }
+// Make sure to export CardDescription here!
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

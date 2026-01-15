@@ -1,14 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { ConnectDB } from "./config/database.js";
 import router from "./modules/admin/routes/adminRouter.js";
 import dealer_router from "./modules/dealer/routes/dealerRoutes.js"
 import user_router from "./modules/users/routes/userRoutes.js"
+
 dotenv.config();
 
 const app = express();
-
+app.use(
+    cors({
+      origin: "http://localhost:5173",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+    })
+  );
 app.use(express.json());
+
 app.use("/api/admin", router);
 app.use("/api/dealer",dealer_router)
 app.use("/api/user",user_router)
