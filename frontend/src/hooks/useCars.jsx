@@ -12,6 +12,7 @@ export const useCars = () => {
     try {
       const response = await API.get("admin/allAdminCars");
       setCars(response.data?.data || []);
+
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch cars");
@@ -74,24 +75,20 @@ export const useCars = () => {
 
   const addCar = async (newCarData) => {
     try {
-      toast.loading("Adding Car...", { id: "add-car" });
-
+      toast.loading("Adding car...", { id: "add-car" });
       const response = await API.post("/admin/addCar", newCarData);
-
       if (response.status === 201) {
-        const addedCar = response.data.data; // assuming API returns the created car
-
-        setCars((prev) => [addedCar, ...prev]); // add new car at the top
-
+        const createdCar = response.data?.data || { ...newCarData };
+        setCars((prev) => [createdCar, ...prev]);
         toast.success("Car added successfully", { id: "add-car" });
-        return { success: true, car: addedCar };
+        return { success: true };
       }
     } catch (error) {
       toast.error("Failed to add car", {
         id: "add-car",
-        description: error.message || "Unknown error",
+        description: error.response?.data?.message || error.message,
       });
-      return { success: false, error: error.message };
+      return { success: false };
     }
   };
 

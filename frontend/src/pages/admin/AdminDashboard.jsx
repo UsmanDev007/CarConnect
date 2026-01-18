@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   LayoutDashboard,
   Car,
@@ -7,6 +8,7 @@ import {
   Settings,
   LogOut,
   ChevronUp,
+  Menu, // Added Menu icon
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -17,11 +19,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useCars } from "../../hooks/useCars";
+import { AddCarDialog } from "./AddCarDialog";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [isOpen, setIsOpen] = useState(false);
+  const { addCar } = useCars();
   const menuItems = [
     {
       name: "Dashboard",
@@ -33,8 +39,9 @@ export default function AdminDashboard() {
     { name: "Dealers", path: "/admin/dealers", icon: <Users size={20} /> },
   ];
 
-  return (
-    <div className="w-64 h-screen bg-slate-900 border-r border-slate-800 flex flex-col fixed left-0 top-0 z-50">
+  // Reusable Sidebar Content Logic
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full bg-slate-900">
       {/* 1. BRANDING */}
       <div className="p-6">
         <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-white">
@@ -45,15 +52,12 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* 2. QUICK ACTION BUTTON (Add Data) */}
+      {/* 2. QUICK ACTION */}
       <div className="px-4 mb-6">
-        <button className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-semibold transition-all shadow-lg shadow-blue-600/10">
-          <PlusCircle size={18} />
-          <span>Add New Listing</span>
-        </button>
+        <AddCarDialog onAdd={addCar} />
       </div>
 
-      {/* 3. MAIN NAVIGATION */}
+      {/* 3. NAVIGATION */}
       <nav className="flex-1 px-4 space-y-1">
         <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2 px-2">
           Main Menu
@@ -61,7 +65,10 @@ export default function AdminDashboard() {
         {menuItems.map((item) => (
           <button
             key={item.name}
-            onClick={() => navigate(item.path)}
+            onClick={() => {
+              navigate(item.path);
+              setIsOpen(false); // Close sidebar on mobile after click
+            }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
               location.pathname === item.path
                 ? "bg-blue-600/10 text-blue-400 border border-blue-600/20"
@@ -74,10 +81,9 @@ export default function AdminDashboard() {
         ))}
       </nav>
 
-      {/* 4. FOOTER: Notifications & Profile */}
+      {/* 4. FOOTER */}
       <div className="p-4 border-t border-slate-800 space-y-2">
-        {/* Notifications Shortcut */}
-        <button className="w-full flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all">
+        <button className="w-full flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg">
           <div className="flex items-center gap-3">
             <Bell size={20} />
             <span className="font-medium">Notifications</span>
@@ -87,11 +93,10 @@ export default function AdminDashboard() {
           </span>
         </button>
 
-        {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="w-full flex items-center gap-3 p-2 hover:bg-slate-800 rounded-xl transition-all outline-none">
-              <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-700 flex items-center justify-center font-bold text-blue-400 shadow-inner">
+            <button className="w-full flex items-center gap-3 p-2 hover:bg-slate-800 rounded-xl outline-none">
+              <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-700 flex items-center justify-center font-bold text-blue-400">
                 AD
               </div>
               <div className="flex-1 text-left">
@@ -109,12 +114,12 @@ export default function AdminDashboard() {
           >
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-slate-800" />
-            <DropdownMenuItem className="gap-2 focus:bg-slate-800 focus:text-white cursor-pointer">
+            <DropdownMenuItem className="gap-2 focus:bg-slate-800 cursor-pointer">
               <Settings size={16} /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-slate-800" />
             <DropdownMenuItem
-              className="gap-2 text-red-400 focus:bg-red-400/10 focus:text-red-400 cursor-pointer"
+              className="gap-2 text-red-400 focus:bg-red-400/10 cursor-pointer"
               onClick={() => {
                 localStorage.clear();
                 navigate("/admin/login");
@@ -126,5 +131,28 @@ export default function AdminDashboard() {
         </DropdownMenu>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* MOBILE HAMBURGER (Visible only on small screens) */}
+      <div className="lg:hidden fixed top-4 left-4 z-[60]">
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <button className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-white shadow-xl">
+              <Menu size={24} />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64 border-r-slate-800">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* DESKTOP SIDEBAR (Visible only on large screens) */}
+      <aside className="hidden lg:flex w-64 h-screen border-r border-slate-800 flex-col fixed left-0 top-0 z-50">
+        <SidebarContent />
+      </aside>
+    </>
   );
 }

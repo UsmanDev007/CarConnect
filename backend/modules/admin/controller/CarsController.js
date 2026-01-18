@@ -10,7 +10,7 @@ export async function addCar(req, res) {
       year,
       carImgUrl,
       detail,
-      createdBy: req.adminId
+      createdBy: req.adminId,
     });
     const savedCar = await newCar.save();
     res.status(201).json({
@@ -43,34 +43,36 @@ export async function getAdminAllCar(req, res) {
   }
 }
 //update the car
-export async function updateCar(req,res){
+export async function updateCar(req, res) {
   try {
-    const {id}=req.params
-    const updatedCar=req.body
-    const car=await Car.findByIdAndUpdate(id,updatedCar,{
-      new:true,
-      runValidators:true
-    })
-    if(!car){
-       return res.status(404).json({message:"Car not Found"})
+    const { id } = req.params;
+    const updatedCar = req.body;
+    const car = await Car.findByIdAndUpdate(id, updatedCar, {
+      new: true,
+      runValidators: true,
+    });
+    if (!car) {
+      return res.status(404).json({ message: "Car not Found" });
     }
-     res.status(200).json({message:"Car Updated Successfully!"})
-    
+    res.status(200).json({ message: "Car Updated Successfully!" });
   } catch (error) {
-    return res.status(404).json({message:"Updated Failed",error:error.message})
+    return res
+      .status(404)
+      .json({ message: "Updated Failed", error: error.message });
   }
 }
 //delete Car
-export async function deleteCar(req,res){
+export async function deleteCar(req, res) {
   try {
-    const {id}=req.params
-    const car=await Car.findByIdAndDelete(id)
-    if(!car){
-       return res.status(404).json({message:"Car not Found"})
+    const { id } = req.params;
+    const car = await Car.findByIdAndDelete(id);
+    if (!car) {
+      return res.status(404).json({ message: "Car not Found" });
     }
-     res.status(200).json({message:"Car Deleted Successfully!"})
-    
+    res.status(200).json({ message: "Car Deleted Successfully!" });
   } catch (error) {
-    return res.status(404).json({message:"Deleted Failed",error:error.message})
+    return res
+      .status(404)
+      .json({ message: "Deleted Failed", error: error.message });
   }
 }

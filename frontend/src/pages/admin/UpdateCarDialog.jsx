@@ -49,7 +49,7 @@ export function UpdateCarDialog({ car, onUpdate }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Edit size={16} />
+       <Edit size={16} className="text-yellow-400 group-hover:text-white transition-colors" />
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg">
