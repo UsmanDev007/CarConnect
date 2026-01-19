@@ -3,8 +3,10 @@ import API from "../api/axios";
 import { toast } from "sonner";
 export const useCars = () => {
   const [cars, setCars] = useState([]);
+  const [pendingCars, setPendingCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [notification, setNotificatin] = useState([]);
 
   // 1. FETCH ALL CARS
   const fetchCars = useCallback(async () => {
@@ -92,6 +94,56 @@ export const useCars = () => {
     }
   };
 
+  //  pending cars to review from the dealer
+  const fetchPendingCars = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await API.get("/admin/pending-cars");
+      if (response.status === 200) {
+        setPendingCars(response?.data || []);
+        setError(null);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch pending cars");
+      toast.error(
+        err.response?.data?.message || "Failed to fetch pending cars",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  const reviewDealerCar = useCallback(async (carId, action) => {
+    setLoading(true);
+    try {
+      const response = await API.put("/admin/review-car", {
+        carId,
+        action,
+      });
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        fetchPendingCars();
+      }
+    } catch (error) {
+      setError(err.response?.data?.message || "Failed to review pending cars");
+      toast.error(
+        err.response?.data?.message || "Failed to review pending cars",
+      );
+    }
+  });
+  //  Admin Notification
+  const fetchAdminNotification = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await API.get("admin/my-notification");
+      setNotificatin(response?.data || []);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch notifcation");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // Run fetch on mount
   useEffect(() => {
     fetchCars();
@@ -104,6 +156,11 @@ export const useCars = () => {
     deleteCar,
     updateCar,
     addCar,
+    fetchPendingCars,
+    pendingCars,
+    notification,
+    fetchAdminNotification,
+    reviewDealerCar,
     refresh: fetchCars,
   };
 };

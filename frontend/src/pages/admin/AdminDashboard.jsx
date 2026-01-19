@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Car,
   Users,
-  PlusCircle,
   Bell,
   Settings,
   LogOut,
   ChevronUp,
-  Menu, // Added Menu icon
+  Menu,
+  AlertCircle, // Added Menu icon
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -27,7 +27,11 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const { addCar } = useCars();
+  const [notifOpen, setNotifOpen] = useState(false);
+  const { addCar, notification, fetchAdminNotification } = useCars();
+  useEffect(() => {
+    fetchAdminNotification();
+  }, []);
   const menuItems = [
     {
       name: "Dashboard",
@@ -35,13 +39,16 @@ export default function AdminDashboard() {
       icon: <LayoutDashboard size={20} />,
     },
     { name: "Inventory", path: "/admin/cars", icon: <Car size={20} /> },
-    { name: "Users", path: "/admin/users", icon: <Users size={20} /> },
-    { name: "Dealers", path: "/admin/dealers", icon: <Users size={20} /> },
+    {
+      name: "Pending Cars",
+      path: "/admin/pendingCar",
+      icon: <Users size={20} />,
+    },
   ];
 
   // Reusable Sidebar Content Logic
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-slate-900">
+    <div className="flex flex-col h-full bg-slate-900 relative overflow-hidden">
       {/* 1. BRANDING */}
       <div className="p-6">
         <div className="flex items-center gap-2 font-bold text-xl tracking-tighter text-white">
@@ -67,7 +74,7 @@ export default function AdminDashboard() {
             key={item.name}
             onClick={() => {
               navigate(item.path);
-              setIsOpen(false); // Close sidebar on mobile after click
+              setIsOpen(false);
             }}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
               location.pathname === item.path
@@ -83,16 +90,24 @@ export default function AdminDashboard() {
 
       {/* 4. FOOTER */}
       <div className="p-4 border-t border-slate-800 space-y-2">
-        <button className="w-full flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg">
+        {/* NOTIFICATION BUTTON */}
+        <button
+          onClick={() => setNotifOpen((prev) => !prev)}
+          className="w-full flex items-center justify-between px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+        >
           <div className="flex items-center gap-3">
             <Bell size={20} />
             <span className="font-medium">Notifications</span>
           </div>
-          <span className="bg-blue-600 text-[10px] text-white px-1.5 py-0.5 rounded-full">
-            4
-          </span>
+
+          {notification?.length > 0 && (
+            <span className="bg-blue-600 text-[10px] text-white px-1.5 py-0.5 rounded-full min-w-[20px] text-center font-bold">
+              {notification.length}
+            </span>
+          )}
         </button>
 
+        {/* ACCOUNT MENU */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="w-full flex items-center gap-3 p-2 hover:bg-slate-800 rounded-xl outline-none">
@@ -129,6 +144,54 @@ export default function AdminDashboard() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </div>
+
+      {/* 🔔 BOTTOM NOTIFICATION SHEET */}
+      <div
+        className={`
+        absolute bottom-0 left-0 w-full
+        bg-slate-900 border-t border-slate-800
+        transition-transform duration-300 ease-out
+        ${notifOpen ? "translate-y-0" : "translate-y-full"}
+      `}
+        style={{ height: "60vh" }}
+      >
+        {/* HEADER */}
+        <div className="p-4 border-b border-slate-800 bg-slate-800/40 flex justify-between items-center">
+          <h3 className="text-sm font-semibold text-white">Notifications</h3>
+          <button
+            onClick={() => setNotifOpen(false)}
+            className="text-xs text-slate-400 hover:text-white"
+          >
+            Close
+          </button>
+        </div>
+
+        {/* SCROLLABLE BODY */}
+        <div className="overflow-y-auto h-[calc(60vh-56px)]">
+          {notification?.length > 0 ? (
+            notification.map((notif) => (
+              <div
+                key={notif._id}
+                className="p-4 border-b border-slate-800/50 flex gap-3 hover:bg-slate-800/50 transition-colors"
+              >
+                <AlertCircle size={14} className="text-blue-500 mt-1" />
+                <div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    {notif.message}
+                  </p>
+                  <span className="text-[10px] text-slate-500">
+                    {new Date(notif.createdAt).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-10 text-center text-slate-500 text-sm">
+              No notifications
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

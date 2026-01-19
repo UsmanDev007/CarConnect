@@ -3,9 +3,8 @@ import AdminLogin from '../pages/admin/Login'
 import ProtectedRoute from './ProtectedRoute'
 import AdminLayout from '../pages/admin/AdminLayout'
 import AdminCars from '../pages/admin/AdminCars'
-import AdminUsers from '../pages/admin/AdminUsers'
-import AdminDealers from '../pages/admin/AdminDealers'
 import Dashobard from '../pages/admin/Dashobard'
+import PendingCars from '../pages/admin/PendingCars'
 const AppRoutes = () => {
   return (
     <>
@@ -19,8 +18,7 @@ const AppRoutes = () => {
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<Dashobard />} />
           <Route path="/admin/cars" element={<AdminCars />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/dealers" element={<AdminDealers />} />
+          <Route path="/admin/pendingCar" element={<PendingCars />} />
         </Route>
       </Route>
 

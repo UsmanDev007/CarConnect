@@ -3,10 +3,9 @@ import { Trash2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCars } from "../../hooks/useCars";
 import { UpdateCarDialog } from "./UpdateCarDialog";
-import { AddCarDialog } from "./AddCarDialog";
 
 const AdminCars = () => {
-  const { cars, loading, error, deleteCar, updateCar, addCar } = useCars();
+  const { cars, loading, error, deleteCar, updateCar } = useCars();
   const [searchTerm, setSearchTerm] = useState("");
   const filterCars = React.useMemo(() => {
     return cars.filter((car) => {
