@@ -1,14 +1,19 @@
 import { useEffect } from "react";
 import { useCars } from "../../hooks/useCars";
 import { Check, X, MapPin, Calendar, Gauge, Trash2 } from "lucide-react";
+import { Spinner } from "../../components/ui/spinner";
 
 const PendingCars = () => {
-  const { pendingCars, loading,fetchPendingCars,reviewDealerCar } = useCars();
-   useEffect(()=>{
-     fetchPendingCars()
-   },[])
+  const { pendingCars, loading, fetchPendingCars, reviewDealerCar } = useCars();
+  useEffect(() => {
+    fetchPendingCars();
+  }, []);
   if (loading) {
-    return <p className="text-white">Loading pending cars...</p>;
+    return (
+      <div className="flex justify-center py-20">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (
@@ -24,7 +29,7 @@ const PendingCars = () => {
       </div>
 
       {/* GRID SECTION */}
-      {pendingCars?.length > 0 ? (
+      {pendingCars ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {pendingCars.map((car) => (
             <div
@@ -82,8 +87,9 @@ const PendingCars = () => {
 
                 {/* ACTION BUTTONS */}
                 <div className="flex gap-3 pt-2">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/10"
-                  onClick={()=>reviewDealerCar(car._id,'approved')}
+                  <button
+                    className="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-emerald-600/10"
+                    onClick={() => reviewDealerCar(car._id, "approved")}
                   >
                     <Check size={16} />
                     Approve
@@ -104,7 +110,9 @@ const PendingCars = () => {
             <Check size={32} />
           </div>
           <h2 className="text-xl font-semibold text-white">All caught up!</h2>
-          <p className="text-slate-400">There are no cars waiting for approval.</p>
+          <p className="text-slate-400">
+            There are no cars waiting for approval.
+          </p>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import { Trash2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCars } from "../../hooks/useCars";
 import { UpdateCarDialog } from "./UpdateCarDialog";
+import { Spinner } from "../../components/ui/spinner";
 
 const AdminCars = () => {
   const { cars, loading, error, deleteCar, updateCar } = useCars();
@@ -64,11 +65,11 @@ const AdminCars = () => {
             <tbody className="divide-y divide-slate-800">
               {loading ? (
                 <tr>
-                  <td
-                    colSpan="5"
-                    className="p-10 text-center text-slate-500 italic"
-                  >
-                    Loading inventory...
+                  {/* Set colSpan to the number of columns in your table */}
+                  <td colSpan={6} className="py-20">
+                    <div className="flex flex-col items-center justify-center w-full gap-3">
+                      <Spinner size="lg" />
+                    </div>
                   </td>
                 </tr>
               ) : (

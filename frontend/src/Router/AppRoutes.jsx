@@ -24,8 +24,8 @@ const AppRoutes = () => {
 
       {/* 3. Automatic Redirect */}
       {/* If someone tries to go to /admin, send them to dashboard (which will then check login) */}
-      <Route path="/admin" element={<Navigate to="/admin/admin-dashboard" replace />} />
-      
+      {/* <Route path="/admin" element={<Navigate to="/admin/admin-dashboard" replace />} />
+       */}
       {/* Catch-all for unknown URLs */}
       <Route path="*" element={<Navigate to="/admin/login" replace />} />
     </Routes>

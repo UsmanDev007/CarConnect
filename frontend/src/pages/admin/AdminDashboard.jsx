@@ -22,6 +22,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCars } from "../../hooks/useCars";
 import { AddCarDialog } from "./AddCarDialog";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function AdminDashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const { addCar, notification, fetchAdminNotification } = useCars();
+  const {user}=useAuth()
   useEffect(() => {
     fetchAdminNotification();
   }, []);
@@ -112,11 +114,11 @@ export default function AdminDashboard() {
           <DropdownMenuTrigger asChild>
             <button className="w-full flex items-center gap-3 p-2 hover:bg-slate-800 rounded-xl outline-none">
               <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-700 flex items-center justify-center font-bold text-blue-400">
-                AD
+                {user?.admin?.name[0]}
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-bold text-white leading-none">
-                  Admin
+                  {user?.admin?.name}
                 </p>
               </div>
               <ChevronUp size={16} className="text-slate-500" />

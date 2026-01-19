@@ -3,10 +3,8 @@ import { Toaster } from "./components/ui/toaster";
 function App() {
   return (
     <>
-      
-      <AppRoutes/>
+      <AppRoutes />
       <Toaster position="bottom-right" richColors />
-
     </>
   );
 }
