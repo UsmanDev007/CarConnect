@@ -1,13 +1,14 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import ProtectedRoute from './ProtectedRoute'
-import AdminLayout from '../pages/admin/AdminLayout'
-import AdminCars from '../pages/admin/AdminCars'
-import Dashobard from '../pages/admin/Dashobard'
-import DealerLayout from '../pages/dealer/DealerLayout'
-import PendingCars from '../pages/admin/PendingCars'
-import DealerCar from '../pages/dealer/DealerCar'
-import Login from '../pages/admin/Login'
-import RoleSelection from './RoleSelect'
+import { Navigate, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminLayout from "../pages/admin/AdminLayout";
+import AdminCars from "../pages/admin/AdminCars";
+import Dashobard from "../pages/admin/Dashobard";
+import DealerLayout from "../pages/dealer/DealerLayout";
+import PendingCars from "../pages/admin/PendingCars";
+import DealerCar from "../pages/dealer/DealerCar";
+import Login from "../pages/admin/Login";
+import RoleSelection from "./RoleSelect";
+import DashboardD from "../pages/dealer/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -19,7 +20,11 @@ const AppRoutes = () => {
       <Route path="/:role/login" element={<Login />} />
 
       {/* 2. Protected Admin Routes */}
-      <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/admin/login' />}>
+      <Route
+        element={
+          <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/login" />
+        }
+      >
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<Dashobard />} />
           <Route path="/admin/cars" element={<AdminCars />} />
@@ -28,9 +33,16 @@ const AppRoutes = () => {
       </Route>
 
       {/* 3. Protected Dealer Routes */}
-      <Route element={<ProtectedRoute allowedRoles={['dealer']} redirectTo='/dealer/login' />}>
+      <Route
+        element={
+          <ProtectedRoute
+            allowedRoles={["dealer"]}
+            redirectTo="/dealer/login"
+          />
+        }
+      >
         <Route element={<DealerLayout />}>
-          <Route path="/dealer/dashboard" element={<Dashobard />} />
+          <Route path="/dealer/dashboard" element={<DashboardD />} />
           <Route path="/dealer/cars" element={<DealerCar />} />
         </Route>
       </Route>
@@ -38,7 +50,7 @@ const AppRoutes = () => {
       {/* 4. Catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;
