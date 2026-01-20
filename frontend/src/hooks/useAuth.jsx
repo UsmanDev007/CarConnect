@@ -1,28 +1,7 @@
-// import API from "../api/axios";
-
-// export const useAuth = (rolePath) => { // rolePath would be 'admin', 'dealer', or 'user'
-//     // for login dealer admin user
-//     const login = async (email, password) => {
-//         // Dynamically points to /api/admin/login, etc.
-//         const res = await API.post(`/${rolePath}/login`, { email, password });
-
-//         localStorage.setItem('token', res.data.token);
-//         localStorage.setItem('role', rolePath); // We set the role based on which page they used
-//         return res.data;
-//     };
-//     // for register dealer and user
-//     const register=async(name,email,password,phone)=>{
-//         const res=await API.post(`/${rolePath}/register`,{name,email,password,phone})
-//         localStorage.setItem('token',res.data.token)
-//         localStorage.setItem('role',rolePath)
-//         return res.data
-//     }
-//     return { login,register };
-// };
 import { useState, useEffect } from "react";
 import API from "../api/axios";
 
-export const useAuth = (rolePath) => {
+export const useAuth = () => {
   const [user, setUser] = useState(null);
 
   // Load user from localStorage on mount
@@ -31,35 +10,42 @@ export const useAuth = (rolePath) => {
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
-  // LOGIN
-  const login = async (email, password) => {
-    const res = await API.post(`/${rolePath}/login`, { email, password });
+  // LOGIN (role is passed dynamically)
+  const login = async (role, email, password) => {
+    try {
+      const res = await API.post(`/${role}/login`, { email, password });
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("role", rolePath);
+      // Store token and role
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
 
-    // store full admin object
-    localStorage.setItem("user", JSON.stringify(res.data));
-    setUser(res.data);
+      // Store user object
+      const userData = res.data.user;
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
 
-    return res.data;
+      return res.data; // Full response (message, token, user)
+    } catch (err) {
+      throw err; // Let the calling component handle errors
+    }
   };
 
-  // REGISTER
-  const register = async (name, email, password, phone) => {
-    const res = await API.post(`/${rolePath}/register`, {
-      name,
-      email,
-      password,
-      phone,
-    });
+  // REGISTER (role is passed dynamically)
+  const register = async (role, name, email, password, phone) => {
+    try {
+      const res = await API.post(`/${role}/register`, { name, email, password, phone });
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("role", rolePath);
-    localStorage.setItem("user", JSON.stringify(res.data));
-    setUser(res.data);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.user.role);
 
-    return res.data;
+      const userData = res.data.user;
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
+
+      return res.data;
+    } catch (err) {
+      throw err;
+    }
   };
 
   // LOGOUT

@@ -9,7 +9,7 @@ export async function getAdmin(req, res) {
     const admin = await Admin.findOne({ email: email.trim().toLowerCase() });
 
     if (!admin) {
-      return res.status(401).json({ message: "Admin not found" });
+      return res.status(401).json({ message: "Sorry Not found" });
     }
 
     if (!admin.isActive) {
@@ -21,14 +21,14 @@ export async function getAdmin(req, res) {
       return res.status(401).json({ message: "Invalid password" });
     }
     const token = jwt.sign(
-      { id: admin._id, email: admin.email },
+      { id: admin._id, email: admin.email,role:"admin" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
     res.status(200).json({
       message: "Login successful",
       token,
-      admin: { name: admin.name, email: admin.email },
+      user: { name: admin.name, email: admin.email,role:"admin" },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

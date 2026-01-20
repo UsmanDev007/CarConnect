@@ -4,55 +4,54 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-  CardDescription
-  
+  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MagicCard } from "../../components/ui/magic-card";
 import { Car } from "lucide-react";
 
 const Login = () => {
-   
-  const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-    
-    // We pass "admin" to tell the hook to hit /api/admin/login
-    const { login } = useAuth("admin"); 
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
+  // We pass "admin" to tell the hook to hit /api/admin/login
+  const { login } = useAuth();
+  const navigate = useNavigate();
+   const { role } = useParams();
 
-        try {
-            await login(email, password);
-            // On success, hook has already saved role: 'admin' and token
-            navigate('/admin/dashboard');
-        } catch (err) {
-            // Check if backend sent a specific error message
-            setError(err.response?.data?.message || 'Invalid Admin Credentials');
-        } finally {
-            setLoading(false);
-        }
-    };
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      // Pass role dynamically to login
+      const data = await login(role, email, password);
+
+      // Redirect based on the role returned from backend
+      const userRole = data.user.role;
+      if (userRole === "admin") navigate("/admin/dashboard");
+      else if (userRole === "dealer") navigate("/dealer/dashboard");
+      else navigate("/home"); // for normal users
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid Credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="flex min-h-screen bg-slate-950 text-white font-sans overflow-hidden">
-      
       {/* LEFT SIDE: Visual Attraction Section */}
       <div className="hidden lg:flex w-7/12 relative flex-col justify-between p-12 overflow-hidden border-r border-slate-800">
         {/* Background Image with Overlay */}
-        <div 
-          className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-1000 hover:scale-105"
-        >
+        <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-1000 hover:scale-105">
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
         </div>
 
@@ -75,7 +74,8 @@ const Login = () => {
             </span>
           </h2>
           <p className="text-slate-100 text-lg leading-relaxed max-w-md">
-            Manage your premium vehicle listings, track performance, and oversee dealer activities from a single, high-performance interface.
+            Manage your premium vehicle listings, track performance, and oversee
+            dealer activities from a single, high-performance interface.
           </p>
         </div>
 
@@ -83,11 +83,15 @@ const Login = () => {
         <div className="relative z-10 flex gap-10">
           <div>
             <p className="text-2xl font-bold">500+</p>
-            <p className="text-xs text-slate-500 uppercase tracking-widest">Active Listings</p>
+            <p className="text-xs text-slate-500 uppercase tracking-widest">
+              Active Listings
+            </p>
           </div>
           <div>
             <p className="text-2xl font-bold">120+</p>
-            <p className="text-xs text-slate-500 uppercase tracking-widest">Global Dealers</p>
+            <p className="text-xs text-slate-500 uppercase tracking-widest">
+              Global Dealers
+            </p>
           </div>
         </div>
       </div>
@@ -99,25 +103,29 @@ const Login = () => {
 
         <Card className="w-full max-w-sm border-none p-0 shadow-2xl bg-transparent z-10">
           <MagicCard
-            gradientColor="#2563eb" 
+            gradientColor="#2563eb"
             gradientOpacity={0.3}
             className="p-0 border border-slate-800 bg-slate-900/80 backdrop-blur-md"
           >
             <CardHeader className="border-slate-800 border-b p-8">
-              <CardTitle className="text-2xl font-bold tracking-tight text-white">System Access</CardTitle>
+              <CardTitle className="text-2xl font-bold tracking-tight text-white">
+                System Access
+              </CardTitle>
               <CardDescription className="text-slate-400">
                 Secure gateway for platform administrators.
               </CardDescription>
             </CardHeader>
-            
+
             <form onSubmit={handleSubmit}>
               <CardContent className="p-8 space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="name@company.com" 
+                  <Label htmlFor="email" className="text-slate-300">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@company.com"
                     className="bg-slate-950/50 border-slate-700 text-white h-11"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -128,9 +136,9 @@ const Login = () => {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password tracking-tight">Password</Label>
                   </div>
-                  <Input 
-                    id="password" 
-                    type="password" 
+                  <Input
+                    id="password"
+                    type="password"
                     placeholder="••••••••"
                     className="bg-slate-950/50 border-slate-700 text-white h-11"
                     value={password}
@@ -146,7 +154,7 @@ const Login = () => {
               </CardContent>
 
               <CardFooter className="border-slate-800 border-t p-8">
-                <Button 
+                <Button
                   type="submit"
                   disabled={loading}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white h-11 font-bold transition-all active:scale-95"
@@ -163,4 +171,3 @@ const Login = () => {
 };
 
 export default Login;
-// i will marquee of magic ui in user login page

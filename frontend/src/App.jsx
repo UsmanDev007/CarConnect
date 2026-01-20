@@ -13,3 +13,4 @@ export default App;
 //bugs
 // no need to refresh the page while adding the new car
 // add some animation on notifcation opening
+// i will marquee of magic ui in user login page

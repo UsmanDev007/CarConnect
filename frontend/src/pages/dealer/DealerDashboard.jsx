@@ -21,10 +21,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCars } from "../../hooks/useCars";
-import { AddCarDialog } from "./AddCarDialog";
+// import { AddCarDialog } from "./AddCarDialog";
 import { useAuth } from "../../hooks/useAuth";
 
-export default function AdminDashboard() {
+export default function DealerDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -37,19 +37,14 @@ export default function AdminDashboard() {
   const menuItems = [
     {
       name: "Dashboard",
-      path: "/admin/dashboard",
+      path: "/dealer/dashboard",
       icon: <LayoutDashboard size={20} />,
     },
-    { name: "Inventory", path: "/admin/cars", icon: <Car size={20} /> },
-    {
-      name: "Pending Cars",
-      path: "/admin/pendingCar",
-      icon: <Users size={20} />,
-    },
+    { name: "Inventory", path: "/dealer/cars", icon: <Car size={20} /> },
   ];
 
   // Reusable Sidebar Content Logic
-  const SidebarContent = () => (
+  const DealerSidebarContent = () => (
     <div className="flex flex-col h-full bg-slate-900 relative overflow-hidden">
       {/* 1. BRANDING */}
       <div className="p-6">
@@ -63,7 +58,7 @@ export default function AdminDashboard() {
 
       {/* 2. QUICK ACTION */}
       <div className="px-4 mb-6">
-        <AddCarDialog onAdd={addCar} />
+        {/* <AddCarDialog onAdd={addCar} /> */}
       </div>
 
       {/* 3. NAVIGATION */}
@@ -209,14 +204,14 @@ export default function AdminDashboard() {
             </button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64 border-r-slate-800">
-            <SidebarContent />
+            <DealerSidebarContent />
           </SheetContent>
         </Sheet>
       </div>
 
       {/* DESKTOP SIDEBAR (Visible only on large screens) */}
       <aside className="hidden lg:flex w-64 h-screen border-r border-slate-800 flex-col fixed left-0 top-0 z-50">
-        <SidebarContent />
+        <DealerSidebarContent />
       </aside>
     </>
   );

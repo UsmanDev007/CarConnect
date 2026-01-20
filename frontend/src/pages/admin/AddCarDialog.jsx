@@ -72,7 +72,7 @@ export function AddCarDialog({ onAdd }) {
 
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Add New Car</DialogTitle>
+          <DialogTitle >Add New Car</DialogTitle>
           <DialogDescription>
             Fill in car details and images, then click "Add".
           </DialogDescription>

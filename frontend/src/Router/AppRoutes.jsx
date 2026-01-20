@@ -1,19 +1,24 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import AdminLogin from '../pages/admin/Login'
 import ProtectedRoute from './ProtectedRoute'
 import AdminLayout from '../pages/admin/AdminLayout'
 import AdminCars from '../pages/admin/AdminCars'
 import Dashobard from '../pages/admin/Dashobard'
+import DealerLayout from '../pages/dealer/DealerLayout'
 import PendingCars from '../pages/admin/PendingCars'
+import DealerCar from '../pages/dealer/DealerCar'
+import Login from '../pages/admin/Login'
+import RoleSelection from './RoleSelect'
+
 const AppRoutes = () => {
   return (
-    <>
-      <Routes>
-      {/* 1. Public Admin Entry */}
-      <Route path="/admin/login" element={<AdminLogin />} />
+    <Routes>
+      {/* 0. Role Selection */}
+      <Route path="/" element={<RoleSelection />} />
 
-      {/* 2. PROTECTED ADMIN ROUTES */}
-      {/* This Wrapper checks if role === 'admin' before showing any page below */}
+      {/* 1. Universal Login Page */}
+      <Route path="/:role/login" element={<Login />} />
+
+      {/* 2. Protected Admin Routes */}
       <Route element={<ProtectedRoute allowedRoles={['admin']} redirectTo='/admin/login' />}>
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<Dashobard />} />
@@ -22,14 +27,17 @@ const AppRoutes = () => {
         </Route>
       </Route>
 
-      {/* 3. Automatic Redirect */}
-      {/* If someone tries to go to /admin, send them to dashboard (which will then check login) */}
-      {/* <Route path="/admin" element={<Navigate to="/admin/admin-dashboard" replace />} />
-       */}
-      {/* Catch-all for unknown URLs */}
-      <Route path="*" element={<Navigate to="/admin/login" replace />} />
+      {/* 3. Protected Dealer Routes */}
+      <Route element={<ProtectedRoute allowedRoles={['dealer']} redirectTo='/dealer/login' />}>
+        <Route element={<DealerLayout />}>
+          <Route path="/dealer/dashboard" element={<Dashobard />} />
+          <Route path="/dealer/cars" element={<DealerCar />} />
+        </Route>
+      </Route>
+
+      {/* 4. Catch-all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-    </>
   )
 }
 

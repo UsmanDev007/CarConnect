@@ -36,14 +36,16 @@ export const loginDealer = async (req, res) => {
 
     // Generate Token (Valid for 1 day)
     const token = jwt.sign(
-      { id: dealer._id, role: "dealer" },
+      { id: dealer._id,email:dealer.email, role: "dealer" },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res
-      .status(200)
-      .json({ message: "Login Successfully", email: dealer.email, JWT: token });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: { name: dealer.name, email: dealer.email,role:"dealer" },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

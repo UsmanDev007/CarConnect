@@ -36,19 +36,23 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        name: user.name, // <--- THIS IS WHAT THE MIDDLEWARE READS
-        role: user.role,
+        name: user.name,
+        role: "user",
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
-    res
-      .status(200)
-      .json({
-        message: "User Login Successfully",
+
+    res.status(200).json({
+      message: "User Login Successfully",
+      token, // Changed from JWT to token
+      user: {
+        // Wrapped fields in a user object
+        name: user.name,
         email: user.email,
-        JWT: token,
-      });
+        role: "user",
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
