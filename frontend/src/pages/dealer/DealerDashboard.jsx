@@ -134,7 +134,7 @@ export default function DealerDashboard() {
               className="gap-2 text-red-400 focus:bg-red-400/10 cursor-pointer"
               onClick={() => {
                 localStorage.clear();
-                navigate("/admin/login");
+                navigate("/dealer/login");
               }}
             >
               <LogOut size={16} /> Logout
