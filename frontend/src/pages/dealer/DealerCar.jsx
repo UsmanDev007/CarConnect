@@ -12,12 +12,24 @@ import {
   PackageOpen,
   Loader2,
 } from "lucide-react";
+import { AddDealerCarDialog } from "./AddCarDialog";
+import { UpdateDealerCarDialog } from "./UpdateCarDialog";
+
 
 const DealerCar = () => {
-  const { car, fetchCars, loading, error } = useDealerCar();
+  const { car, addCar, fetchCars, deleteCar, loading, error ,updateCar} = useDealerCar();
   useEffect(() => {
     fetchCars();
   }, []);
+  const handleDelete = async (id) => {
+    if (
+      window.confirm(
+        "Are you Sure you want to delete this Car if you Delete the Car it will be not showing to End User Anymore",
+      )
+    ) {
+      await deleteCar(id);
+    }
+  };
 
   // --- 1. LOADING STATE (Skeleton Grid) ---
   if (loading) {
@@ -111,13 +123,8 @@ const DealerCar = () => {
             </p>
           </div>
         </div>
-        <button className="group flex items-center gap-2 bg-white text-black hover:bg-blue-500 hover:text-white px-6 py-3 rounded-2xl font-black transition-all duration-300 shadow-lg">
-          <Plus
-            size={20}
-            className="group-hover:rotate-90 transition-transform"
-          />
-          LIST NEW CAR
-        </button>
+          {/* add new car */}
+        <AddDealerCarDialog onAdd={addCar} />
       </div>
 
       {/* Grid Container */}
@@ -231,9 +238,12 @@ const DealerCar = () => {
               {/* Action Buttons */}
               <div className="flex gap-4 mt-auto">
                 <button className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-blue-600 text-white py-3 rounded-2xl text-xs font-black transition-all duration-300">
-                  <Edit3 size={14} /> MANAGE
+                 <UpdateDealerCarDialog car={item} onUpdate={updateCar}/> Update
                 </button>
-                <button className="px-5 flex items-center justify-center bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white py-3 rounded-2xl transition-all duration-300">
+                <button
+                  className="px-5 flex items-center justify-center bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white py-3 rounded-2xl transition-all duration-300"
+                  onClick={() => handleDelete(item._id)}
+                >
                   <Trash2 size={16} />
                 </button>
               </div>

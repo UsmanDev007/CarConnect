@@ -165,7 +165,7 @@ export default function AdminDashboard() {
             onClick={() => setNotifOpen(false)}
             className="text-xs text-slate-400 hover:text-white"
           >
-            Close
+            ❌
           </button>
         </div>
 

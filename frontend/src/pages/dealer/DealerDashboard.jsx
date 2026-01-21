@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Car,
-  Users,
   Bell,
   Settings,
   LogOut,
@@ -23,13 +22,14 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCars } from "../../hooks/useCars";
 // import { AddCarDialog } from "./AddCarDialog";
 import { useAuth } from "../../hooks/useAuth";
+import { useDealerCar } from "../../hooks/useDealerCars";
 
 export default function DealerDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const { addCar, notification, fetchAdminNotification } = useCars();
+  const {notification, fetchAdminNotification } = useCars();
   const { user } = useAuth();
   useEffect(() => {
     fetchAdminNotification();
@@ -160,7 +160,7 @@ export default function DealerDashboard() {
             onClick={() => setNotifOpen(false)}
             className="text-xs text-slate-400 hover:text-white"
           >
-            Close
+            ❌
           </button>
         </div>
 
