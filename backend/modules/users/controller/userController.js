@@ -54,6 +54,7 @@ export const loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         role: "user",
+        phone:user.phone
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
@@ -67,6 +68,7 @@ export const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: "user",
+        phone:user.phone
       },
     });
   } catch (error) {
