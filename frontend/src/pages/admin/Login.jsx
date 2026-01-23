@@ -24,7 +24,7 @@ const Login = () => {
   // We pass "admin" to tell the hook to hit /api/admin/login
   const { login } = useAuth();
   const navigate = useNavigate();
-   const { role } = useParams();
+  const { role } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,6 +162,53 @@ const Login = () => {
                   {loading ? "Verifying..." : "Initialize Session"}
                 </Button>
               </CardFooter>
+              {/* Register User or Dealer */}
+              <div className="space-y-4">
+                {/* Divider */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-slate-700/60" />
+                  </div>
+                  <div className="relative flex justify-center text-[11px] uppercase tracking-widest font-semibold">
+                    <span className="bg-[#0b101d] px-3 text-slate-300">
+                      New to the platform?
+                    </span>
+                  </div>
+                </div>
+
+                {/* Register Buttons */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Dealer */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="
+        h-10 text-[12px] font-semibold
+        border-blue-500/30 text-blue-400
+        bg-blue-500/5
+        hover:bg-blue-500/15 hover:text-blue-300
+      "
+                    onClick={() => navigate("/dealer/register")}
+                  >
+                    Register Dealer
+                  </Button>
+
+                  {/* User */}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="
+        h-10 text-[12px] font-semibold
+        border-emerald-500/30 text-emerald-400
+        bg-emerald-500/5
+        hover:bg-emerald-500/15 hover:text-emerald-300
+      "
+                    onClick={() => navigate("/user/register")}
+                  >
+                    Register User
+                  </Button>
+                </div>
+              </div>
             </form>
           </MagicCard>
         </Card>

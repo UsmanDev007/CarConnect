@@ -15,9 +15,9 @@ import {
 import { AddDealerCarDialog } from "./AddCarDialog";
 import { UpdateDealerCarDialog } from "./UpdateCarDialog";
 
-
 const DealerCar = () => {
-  const { car, addCar, fetchCars, deleteCar, loading, error ,updateCar} = useDealerCar();
+  const { car, addCar, fetchCars, deleteCar, loading, error, updateCar } =
+    useDealerCar();
   useEffect(() => {
     fetchCars();
   }, []);
@@ -123,7 +123,7 @@ const DealerCar = () => {
             </p>
           </div>
         </div>
-          {/* add new car */}
+        {/* add new car */}
         <AddDealerCarDialog onAdd={addCar} />
       </div>
 
@@ -237,9 +237,7 @@ const DealerCar = () => {
 
               {/* Action Buttons */}
               <div className="flex gap-4 mt-auto">
-                <button className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-blue-600 text-white py-3 rounded-2xl text-xs font-black transition-all duration-300">
-                 <UpdateDealerCarDialog car={item} onUpdate={updateCar}/> Update
-                </button>
+                <UpdateDealerCarDialog car={item} onUpdate={updateCar} />
                 <button
                   className="px-5 flex items-center justify-center bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white py-3 rounded-2xl transition-all duration-300"
                   onClick={() => handleDelete(item._id)}

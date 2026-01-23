@@ -63,10 +63,14 @@ export function UpdateDealerCarDialog({ car, onUpdate }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Edit
-          size={16}
-          className="text-yellow-400 group-hover:text-white transition-colors"
-        />
+        <button className="flex-1 flex items-center justify-center gap-2 bg-slate-800 hover:bg-blue-600 text-white py-3 rounded-2xl text-xs font-black transition-all duration-300">
+          <Edit
+            size={16}
+            className="text-yellow-400 group-hover:text-white transition-colors"
+            
+          />
+          Update
+        </button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg overflow-y-auto max-h-[80vh]">

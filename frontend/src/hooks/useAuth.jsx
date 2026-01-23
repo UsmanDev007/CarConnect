@@ -33,7 +33,12 @@ export const useAuth = () => {
   // REGISTER (role is passed dynamically)
   const register = async (role, name, email, password, phone) => {
     try {
-      const res = await API.post(`/${role}/register`, { name, email, password, phone });
+      const res = await API.post(`/${role}/register`, {
+        name,
+        email,
+        password,
+        phone,
+      });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);

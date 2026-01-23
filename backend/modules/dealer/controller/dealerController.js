@@ -18,7 +18,22 @@ export const registerDealer = async (req, res) => {
       phone,
     });
     await newDealer.save();
-    res.status(201).json({ message: "Registered Successfully" });
+    const token = jwt.sign(
+      { id: newDealer._id, role: "dealer" },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
+    res.status(201).json({
+      message: "Registered Successfully",
+      token,
+      user: {
+        id: newDealer._id,
+        name: newDealer.name,
+        email: newDealer.email,
+        role: "dealer",
+        phone: newDealer.phone,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -36,15 +51,15 @@ export const loginDealer = async (req, res) => {
 
     // Generate Token (Valid for 1 day)
     const token = jwt.sign(
-      { id: dealer._id,email:dealer.email, role: "dealer" },
+      { id: dealer._id, email: dealer.email, role: "dealer" },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.status(200).json({
       message: "Login successful",
       token,
-      user: { name: dealer.name, email: dealer.email,role:"dealer" },
+      user: { name: dealer.name, email: dealer.email, role: "dealer" },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -63,15 +78,15 @@ export const addDealerCar = async (req, res) => {
     });
 
     const savedCar = await newDealerCar.save();
-     const admin=await Admin.findOne()
-      if (admin) {
+    const admin = await Admin.findOne();
+    if (admin) {
       await Notification.create({
         recipient: admin._id,
-        recipientModel: 'Admin', // This matches your Enum in the schema
-        message: `New car alert! A dealer has uploaded a ${req.body.brand} ${req.body.model}.`
+        recipientModel: "Admin", // This matches your Enum in the schema
+        message: `New car alert! A dealer has uploaded a ${req.body.brand} ${req.body.model}.`,
       });
     }
-    
+
     res.status(201).json({
       message:
         "Car submitted successfully. It will be visible once Admin approves it.",
@@ -95,14 +110,20 @@ export const getMyUploadedCars = async (req, res) => {
 };
 export const updateMyUploadCars = async (req, res) => {
   try {
-     const {id}=req.params
-     const updateCar=await DealerCar.findByIdAndUpdate({_id:id,dealerId:req.dealerId},{ ...req.body, status: "pending" },{ new: true })
-     if (!updateCar) {
+    const { id } = req.params;
+    const updateCar = await DealerCar.findByIdAndUpdate(
+      { _id: id, dealerId: req.dealerId },
+      { ...req.body, status: "pending" },
+      { new: true },
+    );
+    if (!updateCar) {
       return res.status(404).json({ message: "Car not found or unauthorized" });
     }
-    res.status(200).json({ message: "Car updated and sent for re-approval", updateCar });
+    res
+      .status(200)
+      .json({ message: "Car updated and sent for re-approval", updateCar });
   } catch (error) {
-    res.status(500).json({message:error.message});
+    res.status(500).json({ message: error.message });
   }
 };
 export const deleteMyUploadCars = async (req, res) => {
@@ -111,7 +132,7 @@ export const deleteMyUploadCars = async (req, res) => {
 
     const deletedCar = await DealerCar.findOneAndDelete({
       _id: id,
-      dealerId: req.dealerId // Ensures only the owner can delete
+      dealerId: req.dealerId, // Ensures only the owner can delete
     });
 
     if (!deletedCar) {

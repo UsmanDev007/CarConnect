@@ -21,8 +21,12 @@ router.delete("/delete-car/:id", verifyToken, deleteMyUploadCars);
 router.get("/my-notification", verifyToken, getMyNotifications);
 export default router;
 
-// first dealer
+//  dealers credentials
 // {
 //     "email": "john@citymotors.com",
 //     "password": "dealerpass123"
+// }
+// {
+//   email: 'contact@apexmotors.com',
+//   password: 'password123',
 // }
