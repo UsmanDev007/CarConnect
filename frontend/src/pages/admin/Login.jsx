@@ -39,7 +39,7 @@ const Login = () => {
       const userRole = data.user.role;
       if (userRole === "admin") navigate("/admin/dashboard");
       else if (userRole === "dealer") navigate("/dealer/dashboard");
-      else navigate("/home"); // for normal users
+      else navigate("/user/home"); // for normal users
     } catch (err) {
       setError(err.response?.data?.message || "Invalid Credentials");
     } finally {

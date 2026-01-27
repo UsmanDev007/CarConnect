@@ -12,6 +12,9 @@ import DashboardD from "../pages/dealer/Dashboard";
 import DealerRegister from "../pages/dealer/DealerRegister";
 import UserRegister from "../pages/user/UserRegister";
 import Home from "../pages/user/Home";
+import Cars from "../pages/user/Cars";
+import UsedCar from "../pages/user/UsedCar";
+import CarDetails from "../pages/user/CarDetails";
 
 const AppRoutes = () => {
   return (
@@ -60,8 +63,10 @@ const AppRoutes = () => {
         }
       >
         {/* If you have a UserLayout, wrap it here. Otherwise, use Home directly */}
-        <Route path="/home" element={<Home />} />
-        {/* You can add /user/profile or /user/favorites here later */}
+        <Route path="/user/home" element={<Home />} />
+        <Route path="/user/cars" element={<Cars />} />
+        <Route path="/user/used-cars" element={<UsedCar />} />
+        <Route path="/cars/:id" element={<CarDetails />} />
       </Route>
 
       {/* 4. Catch-all */}

@@ -225,9 +225,6 @@ const Home = () => {
       {/* 3. TESTIMONIALS */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-center text-3xl font-black text-white uppercase italic mb-16">
-            Community Feedback
-          </h2>
           <MarqueeDemo/>
         </div>
       </section>

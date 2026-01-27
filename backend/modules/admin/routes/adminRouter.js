@@ -18,3 +18,7 @@ router.put("/review-car", verifyToken, reviewDealerCar);
 // for notification
 router.get("/my-notification",verifyToken,getMyNotifications)
 export default router;
+// {
+//     "email":"admin@carconnect.com",
+//     "password":"123456"
+// }

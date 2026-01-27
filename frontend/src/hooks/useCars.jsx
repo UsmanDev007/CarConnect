@@ -14,7 +14,7 @@ export const useCars = () => {
     try {
       const response = await API.get("admin/allAdminCars");
       setCars(response.data?.data || []);
-
+      
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch cars");
