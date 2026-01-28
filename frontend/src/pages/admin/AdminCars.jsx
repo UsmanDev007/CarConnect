@@ -4,20 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useCars } from "../../hooks/useCars";
 import { UpdateCarDialog } from "./UpdateCarDialog";
 import { Spinner } from "../../components/ui/spinner";
+import { useSearch } from "../../hooks/useSearch";
 
 const AdminCars = () => {
   const { cars, loading, error, deleteCar, updateCar } = useCars();
-  const [searchTerm, setSearchTerm] = useState("");
-  const filterCars = React.useMemo(() => {
-    return cars.filter((car) => {
-      if (!searchTerm) return true;
-      const brand = car.brand?.toLowerCase() || "";
-      const model = car.model?.toLowerCase() || "";
-      const search = searchTerm.toLowerCase();
-      return brand.includes(search) || model.includes(search);
-    });
-  }, [cars, searchTerm]);
-
+  const { searchTerm, setSearchTerm, filterCars }=useSearch(cars)
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this Car")) {
       await deleteCar(id);

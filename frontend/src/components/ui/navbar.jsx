@@ -28,8 +28,8 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/user/home" },
-    { name: "Cars", path: "/user/cars" },
-    { name: "Used Cars", path: "/user/used-cars" },
+    { name: "New Arrivals", path: "/user/cars" },
+    { name: "Pre-Owned", path: "/user/used-cars" },
   ];
 
   const handleLogout = () => {
@@ -47,7 +47,7 @@ const Navbar = () => {
         </div>
 
         {/* LINKS */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-12">
           {navLinks.map((link) => {
             const active = location.pathname === link.path;
             return (

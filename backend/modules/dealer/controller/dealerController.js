@@ -101,8 +101,9 @@ export const addDealerCar = async (req, res) => {
 // get car
 export const getMyUploadedCars = async (req, res) => {
   try {
-    const myCars = await DealerCar.find({ dealerId: req.dealerId });
-
+    // const myCars = await DealerCar.find({ dealerId: req.dealerId });
+    const myCars = await DealerCar.find();
+     
     res.status(200).json(myCars);
   } catch (error) {
     res.status(500).json({ message: error.message });

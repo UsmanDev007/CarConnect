@@ -3,9 +3,11 @@ import Navbar from "../../components/ui/navbar";
 import { Search, Fuel, Calendar, Gauge, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "../../components/ui/footer";
+import { useSearch } from "../../hooks/useSearch";
 
 const Cars = () => {
   const { cars, loading } = useCars();
+  const { searchTerm, setSearchTerm, filterCars }=useSearch(cars)
   // Helper to format price to PKR style
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
@@ -39,8 +41,10 @@ const Cars = () => {
             <div className="relative flex items-center bg-slate-900 border border-white/10 rounded-2xl p-2 shadow-2xl">
               <Search className="ml-4 text-slate-500" size={20} />
               <input
+                value={searchTerm}
+                onChange={(e)=>setSearchTerm(e.target.value)}
                 type="text"
-                placeholder="Search by brand, model, or city..."
+                placeholder="Search by brand or model"
                 className="bg-transparent border-none outline-none w-full px-4 py-3 text-white placeholder:text-slate-600"
               />
               <button className="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all">
@@ -58,7 +62,7 @@ const Cars = () => {
             Available <span className="text-blue-500">Inventory</span>
           </h2>
           <span className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">
-            Showing {cars?.length || 0} Vehicles
+            Showing {filterCars?.length || 0} Vehicles
           </span>
         </div>
 
@@ -68,7 +72,7 @@ const Cars = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {cars?.map((car) => (
+            {filterCars?.map((car) => (
               <div
                 key={car._id}
                 className="group bg-slate-900/50 border border-white/5 rounded-3xl overflow-hidden hover:border-blue-500/30 transition-all duration-500"
