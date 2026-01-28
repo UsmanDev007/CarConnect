@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import DealerCar from "../../dealer/model/DealerCar.js";
 import Notification from "../model/Notification.js";
+import Dealer from '../../dealer/model/Dealer.js'
+import User from '../../users/model/User.js'
 export async function getAdmin(req, res) {
   const { email, password } = req.body;
   try {
@@ -72,5 +74,19 @@ export const reviewDealerCar = async (req, res) => {
     res.status(200).json({ message: `Car ${action} and Dealer notified!` });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+// GET /admin/dashboard-stats
+export const getDashboardStats = async (req, res) => {
+  try {
+    const usersCount = await User.countDocuments();
+    const dealersCount = await Dealer.countDocuments();
+
+    res.status(200).json({
+      users: usersCount,
+      dealers: dealersCount,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch dashboard stats" });
   }
 };
