@@ -12,12 +12,10 @@ import {
 } from "@/components/ui/dialog"; // shadcn Dialog
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 import { Plus } from "lucide-react";
 
 export function AddCarDialog({ onAdd }) {
   const [open, setOpen] = useState(false);
-
   // Car fields
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -48,7 +46,7 @@ export function AddCarDialog({ onAdd }) {
 
     const result = await onAdd(newCarData);
     if (result.success) {
-      setOpen(false); // close dialog
+      setOpen(false); 
       // Reset form
       setBrand("");
       setModel("");

@@ -80,7 +80,7 @@ export const useCars = () => {
       toast.loading("Adding car...", { id: "add-car" });
       const response = await API.post("/admin/addCar", newCarData);
       if (response.status === 201) {
-        const createdCar = response.data?.data || { ...newCarData };
+        const createdCar = response.data?.data
         setCars((prev) => [createdCar, ...prev]);
         toast.success("Car added successfully", { id: "add-car" });
         return { success: true };
@@ -146,8 +146,11 @@ export const useCars = () => {
 
   // Run fetch on mount
   useEffect(() => {
-    fetchCars();
-  }, [fetchCars]);
+  fetchCars();
+  fetchPendingCars();
+  fetchAdminNotification();
+}, [fetchCars, fetchPendingCars, fetchAdminNotification]);
+
 
   return {
     cars,
@@ -156,6 +159,7 @@ export const useCars = () => {
     deleteCar,
     updateCar,
     addCar,
+    fetchCars,
     fetchPendingCars,
     pendingCars,
     notification,

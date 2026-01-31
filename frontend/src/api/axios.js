@@ -1,9 +1,19 @@
-import axios from 'axios'
-const token=localStorage.getItem('token')
+import axios from "axios";
+
 const API = axios.create({
-    baseURL: 'http://localhost:3000/api',
-    headers:{
-        'Authorization':`Bareer ${token}`
+  baseURL: "http://localhost:3000/api",
+});
+
+// Attach token automatically
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-})
-export default API
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default API;

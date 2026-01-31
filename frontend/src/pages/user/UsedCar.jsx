@@ -146,7 +146,7 @@ const UsedCar = () => {
                   </div>
 
                   <Link
-                    to={`/cars/${item._id}`}
+                    to={``}
                     state={{ car: item }}
                     className="flex items-center justify-center gap-2 w-full bg-white/5 hover:bg-blue-600 text-white border border-white/10 hover:border-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all group/btn"
                   >
