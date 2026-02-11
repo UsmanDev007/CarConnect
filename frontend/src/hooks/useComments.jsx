@@ -1,42 +1,67 @@
-import { useCallback, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import API from "../api/axios";
 
-export const useComment = () => {
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+/* ---------------- API FUNCTIONS ---------------- */
+const getComments = async (carId) => {
+  const res = await API.get(`/user/comments/${carId}`);
+  return res.data || [];
+};
 
-  const fetchComments = useCallback(async (id) => {
-    if (!id) return;
-    setLoading(true);
-    setError(null);
+const addComment = async (payload) => {
+  const res = await API.post("/user/add-comment", payload);
+  return res;
+};
 
-    try {
-      const response = await API.get(`/user/comments/${id}`);
-      setComments(response?.data || []);
-    } catch (err) {
-      console.error("FETCH ERROR:", err.response || err);
-      setError(err.response?.data?.message || "Failed to fetch comments");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+/* ---------------- HOOK ---------------- */
+export const useComment = (carId) => {
+  const queryClient = useQueryClient();
 
-  const postComment = async (newCarComment) => {
-    const toastId = toast.loading("Adding comment...");
-    try {
-      const response = await API.post("/user/add-comment", newCarComment);
+  /* -------- FETCH COMMENTS -------- */
+  const {
+    data: comments = [],
+    isLoading: loading,
+    error,
+    refetch: fetchComments, // manual trigger
+  } = useQuery({
+    queryKey: ["comments", carId], // ✅ queryKey per car
+    queryFn: () => getComments(carId),
+    enabled: !!carId, // only fetch if carId exists
+    staleTime: 1000 * 60, // 1 minute cache
+  });
+
+  /* -------- POST COMMENT -------- */
+  const { mutateAsync } = useMutation({
+    mutationFn: addComment,
+
+    onMutate: () => {
+      toast.loading("Adding comment...", { id: "add-comment" });
+    },
+
+    onSuccess: (response) => {
       if (response.status === 201) {
-        setComments((prev) => [response?.data, ...prev]);
-        toast.success("Comment added", { id: toastId });
-        return { success: true };
+        // update cache instantly
+        queryClient.setQueryData(
+          ["comments", carId],
+          (old = []) => [response.data, ...old]
+        );
+        toast.success("Comment added", { id: "add-comment" });
       }
-    } catch (err) {
-      console.error("POST ERROR:", err.response || err);
-      toast.error(err.response?.data?.message || "Failed to add comment", {
-        id: toastId,
-      });
+    },
+
+    onError: (err) => {
+      toast.error(
+        err?.response?.data?.message || "Failed to add comment",
+        { id: "add-comment" }
+      );
+    },
+  });
+
+  const postComment = async (payload) => {
+    try {
+      await mutateAsync(payload);
+      return { success: true };
+    } catch {
       return { success: false };
     }
   };
@@ -45,7 +70,7 @@ export const useComment = () => {
     comments,
     loading,
     error,
-    fetchComments,
+    fetchComments, 
     postComment,
   };
 };

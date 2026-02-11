@@ -5,6 +5,7 @@ import { Spinner } from "../../components/ui/spinner";
 
 const PendingCars = () => {
   const { pendingCars, loading, fetchPendingCars, reviewDealerCar } = useCars();
+  
   useEffect(() => {
     fetchPendingCars();
   }, []);
@@ -29,7 +30,7 @@ const PendingCars = () => {
       </div>
 
       {/* GRID SECTION */}
-      {pendingCars ? (
+      {pendingCars.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {pendingCars.map((car) => (
             <div

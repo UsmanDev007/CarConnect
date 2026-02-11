@@ -13,33 +13,29 @@ const CarDetails = () => {
   const navigate = useNavigate();
   const { cars } = useCars();
   const [car, setCar] = useState(location.state?.car || null);
-  const { comments, fetchComments, postComment, loading, error } = useComment();
+  const { comments, loading, error, fetchComments, postComment } = useComment(id);
   const [commentText, setCommentText] = useState("");
-
+  useEffect(()=>{
+   window.scrollTo({ top: 0, behavior: "smooth" });
+  },[])
   useEffect(() => {
     if (!car && cars) {
       const foundCar = cars.find((c) => c._id === id);
       setCar(foundCar);
     }
     if (id) {
-      fetchComments(id); // ✅ correct place
+      fetchComments(id);
     }
   }, [id, car, cars, fetchComments]);
 
   const handlePostComment = async () => {
-    if (!commentText.trim()) return;
+  if (!commentText.trim()) return;
 
-    const payload = {
-      carId: id,
-      text: commentText,
-    };
+  const payload = { carId:id, text: commentText };
+  const result = await postComment(payload);
 
-    const result = await postComment(payload);
-
-    if (result.success) {
-      setCommentText(""); // clear input
-    }
-  };
+  if (result.success) setCommentText("");
+};
 
   if (!car) return <Spinner />;
 
@@ -172,9 +168,9 @@ const CarDetails = () => {
               </p>
             </div>
           ) : (
-            comments.map((comment, index) => (
+            comments.map((comment) => (
               <div
-                key={comment._id || `comment-${index}`} // Unique key fix
+                key={comment._id}
                 className="group bg-slate-900/40 p-6 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-slate-900/60 transition-all"
               >
                 <div className="flex items-start gap-4">

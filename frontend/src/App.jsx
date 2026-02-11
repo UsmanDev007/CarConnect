@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import AppRoutes from "./Router/AppRoutes";
 import { Toaster } from "./components/ui/toaster";
 function App() {
+  
   return (
     <>
       <AppRoutes />
