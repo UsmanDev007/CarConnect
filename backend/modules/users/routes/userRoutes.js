@@ -9,12 +9,4 @@ router.post("/add-comment",verifyToken,addComment)
 router.get("/comments/:carId",getCarComments)
 
 export default router;
-// user
-// {
-//     hamza.tariq@gmail.com
-//     hamza@123
-// }
-// {
-//     Osman.Wad69@gmail.com
-//     usman@123
-// }
+
